@@ -50,6 +50,7 @@ type Email struct {
 	Headers     textproto.MIMEHeader
 	Attachments []*Attachment
 	ReadReceipt []string
+	MailFrom    string // override From as SMTP envelope sender (optional) - upgrade by polakto
 }
 
 // part is a copyable representation of a multipart.Part
@@ -427,6 +428,15 @@ func (e *Email) Send(addr string, a smtp.Auth) error {
 
 // Select and parse an SMTP envelope sender address.  Choose Email.Sender if set, or fallback to Email.From.
 func (e *Email) parseSender() (string, error) {
+	// upgrade by polakto
+	if e.MailFrom != "" {
+		mailFrom, err := mail.ParseAddress(e.MailFrom)
+		if err != nil {
+			return "", err
+		}
+		return mailFrom.Address, nil
+	}
+
 	if e.Sender != "" {
 		sender, err := mail.ParseAddress(e.Sender)
 		if err != nil {
