@@ -290,6 +290,15 @@ func (p *Pool) Send(e *Email, timeout time.Duration) (err error) {
 	if err != nil {
 		return
 	}
+	// // upgrade by polakto
+	// if e.MailFrom != "" {
+	// 	mailFrom, err := mail.ParseAddress(e.MailFrom)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	from = mailFrom.Address
+	// }
+	// // upgrade by polakto END
 	if err = c.Mail(from); err != nil {
 		return
 	}
