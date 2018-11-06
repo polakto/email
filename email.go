@@ -423,6 +423,7 @@ func (e *Email) Send(addr string, a smtp.Auth) error {
 	if err != nil {
 		return err
 	}
+	fmt.Printf("{{DEBUG}} single sending envelope.from: %s", sender)
 	return smtp.SendMail(addr, a, sender, to, raw)
 }
 
@@ -436,6 +437,7 @@ func (e *Email) parseSender() (string, error) {
 		}
 		return mailFrom.Address, nil
 	}
+	// upgrade by polakto END
 
 	if e.Sender != "" {
 		sender, err := mail.ParseAddress(e.Sender)
